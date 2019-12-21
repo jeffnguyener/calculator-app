@@ -12,7 +12,7 @@ class Calculator {
   }
 
   delete() {
-      this.currentOperand = this.currentOperand.toString().slice(0, -1)
+    this.currentOperand = this.currentOperand.toString().slice(0, -1);
   }
 
   appendNumber(number) {
@@ -51,14 +51,41 @@ class Calculator {
       default:
         return;
     }
-    this.currentOperand = computation
-    this.operation = undefined
-    this.previousOperand = ''
+    this.currentOperand = computation;
+    this.operation = undefined;
+    this.previousOperand = "";
+  }
+
+  getDisplayNumber(number) {
+    const stringNumber = number.toString();
+    const integerDigits = parseFloat(stringNumber.split(".")[0]);
+    const decimalDigits = stringNumber.split(".")[1];
+    let integerDisplay;
+    if (isNaN(integerDigits)) {
+      integerDisplay = "";
+    } else {
+      integerDisplay = integerDigits.toLocaleString("en", {
+        maximumFractionDigits: 0
+      });
+    }
+    if (decimalDigits != null) {
+      return `${integerDisplay}.${decimalDigits}`;
+    } else {
+      return integerDisplay;
+    }
   }
 
   updateDisplay() {
-    this.currentOperAndTextElement.innerText = this.currentOperand;
-    this.previousOperAndTextElement.innerText = this.previousOperand;
+    this.currentOperAndTextElement.innerText = this.getDisplayNumber(
+      this.currentOperand
+    );
+    if (this.operation != null) {
+      this.previousOperAndTextElement.innerText = `${this.getDisplayNumber(
+        this.previousOperand
+      )} ${this.operation}`;
+    } else {
+        this.previousOperAndTextElement.innerText = ''
+    }
   }
 }
 
@@ -99,12 +126,11 @@ equalsButton.addEventListener("click", button => {
 });
 
 allClearButton.addEventListener("click", button => {
-    calculator.clear();
-    calculator.updateDisplay();
-  });
-  
+  calculator.clear();
+  calculator.updateDisplay();
+});
+
 deleteButton.addEventListener("click", button => {
-    calculator.delete();
-    calculator.updateDisplay();
-  });
-  
+  calculator.delete();
+  calculator.updateDisplay();
+});
